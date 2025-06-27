@@ -337,22 +337,32 @@ class Dexter_Capstone_UI:
     # Measure arm
     def show_arm_scan_screen(self):
         def content(frame):
+            # Display Arm ID
             ctk.CTkLabel(frame, text=f"Arm ID: {self.arm_id}", font=ctk.CTkFont(size=24, weight="bold")).pack(pady=(20, 40))
             # ctk.CTkLabel(frame, text=f"Last calibrated: {self.calibration_date}", font=ctk.CTkFont(size=24, weight="bold")).pack(pady=(20, 40))
+
+            # Start Scanner Button
             ctk.CTkButton(frame, text="Start Scanner", command=self.run_scanner, width=200).pack(pady=(40, 0))
             scan_frame = ctk.CTkFrame(frame)
             scan_frame.pack(pady=(40, 0))
+
+            # Measure from Existing Scan Button and Path Entry
             ctk.CTkButton(scan_frame, text="Measure from existing scan:", command=self.validate_file_and_start, width=200).pack(side=ctk.LEFT, padx=(0, 10))
             self.existing_scan_entry = ctk.CTkEntry(scan_frame, placeholder_text="enter scan file path", width=300)
             self.existing_scan_entry.pack(side=ctk.LEFT)
             mode_frame = ctk.CTkFrame(frame)
             mode_frame.pack(pady=(20, 0))
+
+            # Manual Mode Toggle
             ctk.CTkLabel(mode_frame, text="Manual Mode:", font=ctk.CTkFont(size=18)).pack(side=ctk.LEFT, padx=(0, 10))
             self.auto_mode_switch = ctk.CTkSwitch(mode_frame, text="Auto/Manual", command=self.update_auto_mode)
             self.auto_mode_switch.pack(side=ctk.LEFT)
             self.auto_flag = self.auto_mode_switch.get() == 0
-            ctk.CTkButton(frame, text="Back", command=self.measure_hub, width=200).pack(pady=(40, 0))
+
+            # Back Button
+            ctk.CTkButton(frame, text="Back", command=self.measure_arm, width=200).pack(pady=(40, 0))
             self.master.bind("<Return>", lambda event: self.run_scanner())
+        
         self.setup_screen("TorFlex Axle — Measure Crank Arm Alignment", content)
 
     def calc_arm_alignment(self):
