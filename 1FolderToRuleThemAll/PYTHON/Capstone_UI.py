@@ -378,6 +378,17 @@ class Dexter_Capstone_UI:
                 # scan_resultsR = MH.main(self.calibrationR, self.hub_scan_fileA, self.auto_flag, self.scan_type, ui=self)
                 if isinstance(scan_results, dict) and isinstance(scan_results, dict):
                     self.total_arm_angle = scan_results.get("total_angle", "N/A")
+
+                    # Bar Angles
+                    self.bar_x_angle = scan_results.get("bar_x_angle", "N/A")
+                    self.bar_y_angle = scan_results.get("bar_y_angle", "N/A")
+                    self.bar_z_angle = scan_results.get("bar_z_angle", "N/A")
+
+                    # Spindle Angles
+                    self.spindle_x_angle = scan_results.get("spindle_x_angle", "N/A")
+                    self.spindle_y_angle = scan_results.get("spindle_y_angle", "N/A")
+                    self.spindle_z_angle = scan_results.get("spindle_z_angle", "N/A")
+
                     self.master.after(0, self.show_arm_results)
                 else:
                     self.master.after(0, lambda: messagebox.showerror("Error", "Invalid scan results"))
@@ -412,7 +423,7 @@ class Dexter_Capstone_UI:
 
     def save_arm_results(self):
         df = pd.read_csv(self.arm_database_path, dtype=str)
-        df.loc[df["Arm ID"] == self.arm_id, ["Total Relative Angle", "Date Scanned"]] = [self.total_arm_angle, date.today()]
+        df.loc[df["Arm ID"] == self.arm_id, ["Bar X Angle", "Bar Y Angle", "Bar Z Angle", "Spindle X Angle", "Spindle Y Angle", "Spindle Z Angle", "Total Relative Angle", "Date Scanned"]] = [self.bar_x_angle, self.bar_y_angle, self.bar_z_angle, self.spindle_x_angle, self.spindle_y_angle, self.spindle_z_angle, self.total_arm_angle, date.today()]
         df.to_csv(self.arm_database_path, index=False)
         self.update_status(f"Scan results saved for Arm ID {self.arm_id}")
 
