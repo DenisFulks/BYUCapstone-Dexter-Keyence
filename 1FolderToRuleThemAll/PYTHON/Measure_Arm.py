@@ -21,7 +21,7 @@ def main(filename=None, auto_flag=False, scan_type='live', ui=None, debug_flag=F
         scan1.show_cloud()
 
     # Find bar faces
-    scan1.fit_bar_faces(plotNum=0, cutOff=[-65, 500], show=debug_flag)    #-25, 300
+    scan1.fit_bar_faces(plotNum=0, cutOff=[0, 200], show=debug_flag)    #-25, 300
     # print(f'Bar Axis: {scan1.bar_axis}')
 
     # Find spindle
@@ -52,6 +52,6 @@ def main(filename=None, auto_flag=False, scan_type='live', ui=None, debug_flag=F
     return results
 
 if __name__ == "__main__":
-    main(filename=r'RealScans\Validation\LeftTest.csv', scan_type='live', debug_flag=True)
+    main(filename=r'RealScans\Perfect Arm\Perfect_ArmA10.csv', scan_type='live', debug_flag=True)
     # main(filename=r'3D Simulation\SimScans\CrankArm22.5-right_0toe_-5cam..txt', scan_type='sim')
  
