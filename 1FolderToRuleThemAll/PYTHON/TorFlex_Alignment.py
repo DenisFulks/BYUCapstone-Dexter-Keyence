@@ -267,8 +267,8 @@ class Torsion_Arm_LJS640:
         barCloud = Trim_Cloud(barCloud, 'y', [cutoff[2], cutoff[3]])
         # print('Showing bar cloud'); self.show_cloud(barCloud)
         barCloud = Trim_Cloud(barCloud, 'z', [cutoff[4], cutoff[5]])   #70, 500
-        if show:
-            print('Showing bar cloud'); self.show_cloud(barCloud)
+        # if show:
+        #     print('Showing bar cloud'); self.show_cloud(barCloud)
 
         # Find primary face
         barPrimaryFaces = Cloud_Expected_Normal_Filter(barCloud, self.exp_norm, angle_threshold=6)  #6
@@ -671,7 +671,7 @@ class Torsion_Arm_LJS640:
         v = np.cross(approx_axis, u)
         return u, v
 
-    def select_spindle_points(self, axial_cutoff, show_flag=False):
+    def select_spindle_points(self, axial_cutoff, show_flag=False, spindle_cuts=None):
         """Select points along the bar axis below the axial cutoff."""
         projection = np.dot(self.cloud.T, self.bar_axis)
         if self.side == 'left':
@@ -683,6 +683,7 @@ class Torsion_Arm_LJS640:
             print('Showing spindle cloud after axial filter'); self.show_cloud(self.cloud.T[mask, :].T)
 
         # Compute z maximum and filter points according to it
+        
         y_values = self.cloud.T[mask, 1]
         y_max = np.max(y_values)
         z_values = self.cloud.T[mask, 2]  
@@ -1657,7 +1658,7 @@ class Torsion_Arm_LJS640:
         print(f'Fitting cylinder to final {panel.num_points} points')
         self.fit_cylinder_to_panel(panel)
 
-    def fit_spindle_3D(self, axial_cutoff=-150, show_flag=False, plot_flag=False, box_size=50.0, min_size=1.0, overlap_factor=1.1, max_radius=50):
+    def fit_spindle_3D(self, axial_cutoff=-150, show_flag=False, plot_flag=False, box_size=50.0, spindle_cuts=[0, 500, 0, 500], overlap_factor=1.1, max_radius=50):
         """
         Fits a 3D spindle by creating grids of decreasing panel sizes, keeping good fits.
 
@@ -1674,10 +1675,10 @@ class Torsion_Arm_LJS640:
         col_tol = 0.99  # 0.99
         
         # Setup coordinate system and project points
-        spindle_points = self.select_spindle_points(axial_cutoff, show_flag=show_flag)
+        spindle_points = self.select_spindle_points(axial_cutoff, show_flag=show_flag, spindle_cuts=spindle_cuts)
         self.spindle_cloud = spindle_points
-        if show_flag:
-            print('Showing spindle cloud after all filters'); self.show_cloud(spindle_points.T)
+        # if show_flag:
+        #     print('Showing spindle cloud after all filters'); self.show_cloud(spindle_points.T)
         self.points_xy = self.project_to_xy(spindle_points)
         
         self.axis_xy = self.bar_axis[:2]
@@ -1754,16 +1755,16 @@ class Torsion_Arm_LJS640:
         self.panels.extend(new_good_panels)
 
 
-        if plot_flag:
-            print(f'Showing good panels down to {box_size/3}mm'); self.visualize_good_panels()
+        # if plot_flag:
+        #     print(f'Showing good panels down to {box_size/3}mm'); self.visualize_good_panels()
         # for panel in self.panels:
         #     self.plot_panel_fit(panel)
         #endregion
 
         #region GROUP SLICES BY RADIUS AND SELECT GOOD POINTS
         self.group_panels_by_radius(radius_tolerance=0.10, max_radius=50)
-        if plot_flag:
-            print('Showing slices grouped by radius'); self.visualize_good_panels(self.panel_groups)
+        # if plot_flag:
+        #     print('Showing slices grouped by radius'); self.visualize_good_panels(self.panel_groups)
         # self.fit_axis_to_weighted_spindle_panels2(knn=80, view_normals=True)
 
         for panel in self.panel_groups:
